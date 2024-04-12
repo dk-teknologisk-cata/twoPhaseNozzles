@@ -16,7 +16,7 @@ FoamFile
 limitp
 {
     type        limitPressure;
-    min         517965;
+    min         6e5; // 517965;
     max         1e7;
 }
 limitT
