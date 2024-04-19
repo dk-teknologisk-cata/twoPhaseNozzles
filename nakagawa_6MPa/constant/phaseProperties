@@ -18,18 +18,22 @@ type    thermalPhaseChangeMultiphaseSystem;
 
 phases (gas liquid);
 
+phaseChange on;
+
 gas
 {
     type            purePhaseModel;
-    diameterModel   isothermal; // IATE;
+    diameterModel   isothermal;
     isothermalCoeffs
     {
         d0              3e-3;
         p0              1e5;
     }
 
-    residualAlpha   1e-6;; 
-    /*
+    residualAlpha   1e-3;
+
+    /* 
+    diameterModel   IATE;
     IATECoeffs
     {
         dMax 1e-2;
@@ -80,16 +84,14 @@ liquid
 {
     type            purePhaseModel;
     diameterModel   none;
-    Sc              0.7;
-
-    residualAlpha   1e-6;
+    residualAlpha   1e-3;
 }
 
 drag
 {
     gas_dispersedIn_liquid
     {
-        type            IshiiZuber;
+        type            SchillerNaumann; //IshiiZuber;
     }
 }
 
@@ -107,16 +109,19 @@ heatTransfer
     gas_dispersedIn_liquid_inThe_gas
     {
         type spherical;
+        residualAlpha   1e-3;
     }
 
     gas_dispersedIn_liquid_inThe_liquid
     {
         type RanzMarshall;
+        residualAlpha   1e-3;
     }
 }
 
 lift
 {
+    /*
     gas_dispersedIn_liquid
     {
         type wallDamped;
@@ -140,27 +145,33 @@ lift
             zeroWallDist 0.0002;
         }
     }
+    */
 }
 
 wallLubrication
 {
+    /*
     gas_dispersedIn_liquid
     {
         type            Antal;
         Cw1             -0.01;
         Cw2             0.05;
     }
+    */
 }
 
 turbulentDispersion
 {
+    /*
     gas_dispersedIn_liquid
     {
         type                LopezDeBertodano;
         Ctd                 1.0;
         residualAlpha       1e-3;
     }
+    */
 }
+
 
 blending
 {
@@ -171,8 +182,9 @@ blending
     }
 }
 
+
 saturationTemperature
-{
+{    
     gas_liquid
     {
         type function1;
@@ -189,21 +201,24 @@ saturationTemperature
             refColumn           1;
             componentColumns    (0);
             mergeSeparators     no;
-            // file "$FOAM_TUTORIALS/resources/thermoData/wallBoiling-saturation.csv";
-            file "$FOAM_RUN/twoPhaseNozzle/nakagawa_6MPa/CarbonDioxide_517964_10000000_218.592_400_saturation.csv";
+            file "$FOAM_RUN/twoPhaseNozzles/nakagawa_6MPa/CarbonDioxide_590000_6500000_218.592_400_saturation.csv";
+            //file "$FOAM_RUN/twoPhaseNozzles/nakagawa_6MPa/CarbonDioxide_517964_10000000_218.592_400_saturation.csv";
             outOfBounds         clamp;
             interpolationScheme linear;
         }
     }
+    
 }
 
 surfaceTension
 {
+    /*
     gas_liquid
     {
         type            constant;
-        sigma           0.00176574;
+        sigma           1e-5;
     }
+    */
 }
 
 phaseTransfer

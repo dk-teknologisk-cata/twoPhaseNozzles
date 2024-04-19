@@ -22,12 +22,30 @@ ddtSchemes
 gradSchemes
 {
     default         Gauss linear;
-    limited         cellLimited Gauss linear 1;
+    //limited         cellLimited Gauss linear 1;
 }
 
 divSchemes
 {
-    default                        Gauss upwind;
+    default                        none;
+    
+    div(phi,alpha)              Gauss vanLeer;
+    div(phir,alpha)             Gauss vanLeer;
+
+    div(alphaRhoPhi,U)          Gauss limitedLinearV 1;
+    div(phi,U)                  Gauss limitedLinearV 1;
+
+    div(alphaRhoPhi,Yi)         Gauss limitedLinear 1;
+    "div\(alphaRhoPhi,(h|e)\)"  Gauss limitedLinear 1;
+
+    div(alphaRhoPhi,K)          Gauss limitedLinear 1;
+    div(alphaRhoPhi,(p|rho))    Gauss limitedLinear 1;
+
+    "div\(alphaRhoPhi,(k|epsilon)\)"  Gauss limitedLinear 1;
+    "div\(phim,(k|epsilon)m\)"  Gauss limitedLinear 1;
+
+    div((((alpha*rho)*nuEff)*dev2(T(grad(U))))) Gauss linear;
+
     /*
     div(phi,alpha)            Gauss vanLeer;
     div(phir,alpha)           Gauss vanLeer;
@@ -49,7 +67,7 @@ divSchemes
 
 laplacianSchemes
 {
-    default         Gauss linear corrected;
+    default         Gauss linear uncorrected; //Gauss linear corrected;
 }
 
 interpolationSchemes
@@ -59,7 +77,7 @@ interpolationSchemes
 
 snGradSchemes
 {
-    default         corrected;
+    default         uncorrected; // corrected;
 }
 
 fluxRequired
@@ -70,7 +88,6 @@ fluxRequired
 wallDist
 {
     method          meshWave;
-    nRequired       yes;
 }
 
 

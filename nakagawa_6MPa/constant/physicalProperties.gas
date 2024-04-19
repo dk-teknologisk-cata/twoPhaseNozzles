@@ -25,6 +25,8 @@ thermoType
     energy          sensibleEnthalpy;
 }
 
+dpdt yes;
+
 mixture
 {
     specie
@@ -32,7 +34,7 @@ mixture
         molWeight       44.01;
     }
 
-    #include "$FOAM_RUN/twoPhaseNozzle/nakagawa_6MPa/CarbonDioxide_600000_10000000_218.592_400_vapour"
-    //#include "$FOAM_RUN/twoPhaseNozzle/nakagawa_6MPa/CarbonDioxide_517964_10000000_218.592_400_vapour"
+    #include "$FOAM_RUN/twoPhaseNozzles/nakagawa_6MPa/CarbonDioxide_590000_6500000_218.592_400_vapour"
+    //#include "$FOAM_RUN/twoPhaseNozzles/nakagawa_6MPa/CarbonDioxide_517964_10000000_218.592_400_vapour"
 }
 // ************************************************************************* //

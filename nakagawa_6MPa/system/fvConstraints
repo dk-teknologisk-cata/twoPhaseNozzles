@@ -16,23 +16,24 @@ FoamFile
 limitp
 {
     type        limitPressure;
-    min         6e5; // 517965;
-    max         1e7;
+    min         5.9e5; // 517965;
+    max         6.4e6;
 }
 limitT
 {
     type        limitTemperature;
     select      all;
     phase       liquid;
-    min         218.6;
-    max         399.9;
+    min         220; //218.6;
+    max         390;
 }
 limitT
 {
     type        limitTemperature;
     select      all;
     phase       gas;
-    min         218.6;
-    max         399.9;
+    min         220; //218.6;
+    max         390;
 }
+
 // ************************************************************************* //

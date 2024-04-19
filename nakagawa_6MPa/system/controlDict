@@ -28,7 +28,7 @@ endTime         4;
 
 deltaT          0.0001;
 
-writeControl    timeStep; //adjustableRunTime;
+writeControl    timeStep;
 
 writeInterval   1;
 
@@ -54,12 +54,27 @@ maxDeltaT       0.001;
 
 functions
 {
+    dmdt_gas
+   {
+        type                  writeObjects;
+        libs                  ("libutilityFunctionObjects.so");
+        writeControl          writeTime;
+        objects
+        ("dmdt.gas");
+   }
+    Tsat
+   {
+        type                  writeObjects;
+        libs                  ("libutilityFunctionObjects.so");
+        writeControl          writeTime;
+        objects
+        ("thermalPhaseChange:Tsat.gas_liquid");
+   }
     rho_gas
    {
         type                  writeObjects;
         libs                  ("libutilityFunctionObjects.so");
-        writeControl          timeStep;
-        writeInterval         1;
+        writeControl          writeTime;
         objects
         ("rho.gas");
    }
@@ -67,8 +82,7 @@ functions
    {
         type                  writeObjects;
         libs                  ("libutilityFunctionObjects.so");
-        writeControl          timeStep;
-        writeInterval         1;
+        writeControl          writeTime;
         objects
         ("rho.liquid");
    }
@@ -76,8 +90,7 @@ functions
    {
         type                  writeObjects;
         libs                  ("libutilityFunctionObjects.so");
-        writeControl          timeStep;
-        writeInterval         1;
+        writeControl          writeTime;
         objects
         ("h.gas");
    }
@@ -85,8 +98,7 @@ functions
    {
         type                  writeObjects;
         libs                  ("libutilityFunctionObjects.so");
-        writeControl          timeStep;
-        writeInterval         1;
+        writeControl          writeTime;
         objects
         ("h.liquid");
    }

@@ -15,6 +15,7 @@ FoamFile
 }
 // * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * //
 
+/*
 phaseTurbulenceStabilisationGas
 {
     type    phaseTurbulenceStabilisation;
@@ -36,3 +37,4 @@ phaseTurbulenceStabilisationLiquid
 
     alphaInversion  0.1;
 }
+*/

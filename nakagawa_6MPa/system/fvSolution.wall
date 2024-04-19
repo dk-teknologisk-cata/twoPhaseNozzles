@@ -19,17 +19,17 @@ solvers
     "alpha.*"
     {
         nAlphaCorr      1;
-        nAlphaSubCycles 3;
+        nAlphaSubCycles 1;
     }
 
     p_rgh
     {
         solver          GAMG;
         smoother        DIC;
-
         tolerance       1e-8;
         relTol          0.01;
         maxIter         20;
+        minIter         2;
     }
 
     p_rghFinal
@@ -38,67 +38,58 @@ solvers
         relTol          0;
     }
 
-    "U.*"
-    {
-        solver          PBiCGStab;
-        preconditioner  DILU;
-
-        tolerance       1e-6;
-        relTol          0;
-    }
-
     "(e|h).*"
     {
         solver          PBiCGStab;
         preconditioner  DILU;
-
-        tolerance       1e-8;
-        relTol          0;
+        tolerance       1e-12;
+        relTol          0.001;
+        minIter         1;
         maxIter         20;
     }
 
-    "(k|epsilon).*"
+    "(k|epsilon|omega).*"
     {
         solver          PBiCGStab;
         preconditioner  DILU;
-
         tolerance       1e-8;
         relTol          0;
+        minIter         1;
     }
 
-    "Yi.*"
+    "kappai.*"
     {
         solver          PBiCGStab;
         preconditioner  DILU;
-
-        tolerance       1e-8;
+        tolerance       1e-6;
         relTol          0;
     }
 }
 
 PIMPLE
 {
-    nOuterCorrectors    2;
-    nCorrectors         2;
+    nOuterCorrectors    1;
+    nCorrectors         1;
     nNonOrthogonalCorrectors 0;
-    nEnergyCorrectors   2;
+    nEnergyCorrectors   1;
 
     faceMomentum        no;
     VmDdtCorrection     yes;
     dragCorrection      yes;
-    partialElimination  yes;
+    partialElimination  no;
 }
 
 relaxationFactors
 {
     fields
     {
-        thermalPhaseChange:dmdtf 1;
+        thermalPhaseChange:dmdtf    1.0;
     }
 
     equations
     {
         ".*"            1;
+        "h\..*"         1;
     }
 }
 

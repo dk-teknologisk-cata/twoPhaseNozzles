@@ -23,10 +23,12 @@ boundaryField
     inlet
     {
         type            prghTotalPressure;
-        p0              $internalField;
+        p0              uniform 6.1e6;
         U               U.liquid;
         value           $internalField;
+        
     }
+
     outlet
     {
         type            prghPressure;
