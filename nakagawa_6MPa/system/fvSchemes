@@ -27,8 +27,9 @@ gradSchemes
 
 divSchemes
 {
-    default                        none;
-    
+    default                     none;
+
+    /*
     div(phi,alpha)              Gauss vanLeer;
     div(phir,alpha)             Gauss vanLeer;
 
@@ -45,8 +46,8 @@ divSchemes
     "div\(phim,(k|epsilon)m\)"  Gauss limitedLinear 1;
 
     div((((alpha*rho)*nuEff)*dev2(T(grad(U))))) Gauss linear;
+    */
 
-    /*
     div(phi,alpha)            Gauss vanLeer;
     div(phir,alpha)           Gauss vanLeer;
 
@@ -62,7 +63,7 @@ divSchemes
     "div\(phim,(k|epsilon)m\)"      Gauss linearUpwind limited;
 
     div((((alpha*rho)*nuEff)*dev2(T(grad(U))))) Gauss linear;
-    */
+
 }
 
 laplacianSchemes

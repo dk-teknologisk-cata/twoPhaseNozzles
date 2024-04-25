@@ -18,73 +18,101 @@ type    thermalPhaseChangeMultiphaseSystem;
 
 phases (gas liquid);
 
-phaseChange on;
-
 gas
 {
     type            purePhaseModel;
-    diameterModel   isothermal;
+    diameterModel   constant; //isothermal;
+    d               1e-4;
+    /*
     isothermalCoeffs
     {
         d0              3e-3;
         p0              1e5;
     }
-
-    residualAlpha   1e-3;
-
-    /* 
-    diameterModel   IATE;
-    IATECoeffs
-    {
-        dMax 1e-2;
-        dMin 1e-4;
-        residualAlpha 1e-4;
-
-        sources
-        (
-            wakeEntrainmentCoalescence
-            {
-                Cwe         0.002;
-            }
-
-            randomCoalescence
-            {
-                Crc         0.04;
-                C           3;
-                alphaMax    0.75;
-            }
-
-            turbulentBreakUp
-            {
-                Cti         0.085;
-                WeCr        6;
-            }
-
-            phaseChange
-            {
-                otherPhase  liquid;
-                dmdtf       thermalPhaseChange:dmdtf;
-            }
-
-            wallBoiling
-            {}
-        );
-    }
-
-    constantCoeffs
-    {
-        d               0.00045;
-    }
-
-    residualAlpha   1e-6;
     */
+    residualAlpha   1e-3;
 }
 
 liquid
 {
     type            purePhaseModel;
+    diameterModel   constant; //isothermal;
+    d               1e-4;
+    /*
+    isothermalCoeffs
+    {
+        d0              3e-3;
+        p0              1e5;
+    }
+    */
+    residualAlpha   1e-3;
+    /*
     diameterModel   none;
     residualAlpha   1e-3;
+    */
+}
+
+blending
+{
+    /*
+    default
+    {
+        type            continuous;
+        phase           liquid;
+    }
+    */
+    default
+    {
+        type            linear;
+        minPartlyContinuousAlpha.gas 0.3;
+        minFullyContinuousAlpha.gas 0.7;
+        minPartlyContinuousAlpha.liquid 0.3;
+        minFullyContinuousAlpha.liquid 0.7;
+    }
+
+    heatTransfer
+    {
+        type            linear;
+        minPartlyContinuousAlpha.gas 0;
+        minFullyContinuousAlpha.gas 1;
+        minPartlyContinuousAlpha.liquid 0;
+        minFullyContinuousAlpha.liquid 1;
+    }
+}
+
+saturationTemperature
+{    
+    gas_liquid
+    {
+        type function1;
+
+        function scale;
+
+        xScale 1e-6;
+        scale   1;
+        value
+        {
+            type                tableFile;
+            format              csv;
+            nHeaderLine         1;
+            refColumn           1;
+            componentColumns    (0);
+            mergeSeparators     no;
+            file "$FOAM_RUN/twoPhaseNozzles/nakagawa_6MPa/CarbonDioxide_590000_6500000_218.592_400_saturation.csv";
+            //file "$FOAM_RUN/twoPhaseNozzles/nakagawa_6MPa/CarbonDioxide_517964_10000000_218.592_400_saturation.csv";
+            outOfBounds         clamp;
+            interpolationScheme linear;
+        }
+    }
+}
+
+surfaceTension
+{
+    gas_liquid
+    {
+        type            constant;
+        sigma           1e-3;
+    }
 }
 
 drag
@@ -93,29 +121,57 @@ drag
     {
         type            SchillerNaumann; //IshiiZuber;
     }
+    liquid_dispersedIn_gas
+    {
+        type            SchillerNaumann; //IshiiZuber;
+    }
 }
 
 virtualMass
 {
+    /*
     gas_dispersedIn_liquid
     {
         type            constantCoefficient;
         Cvm             0.5;
     }
+    */
 }
 
 heatTransfer
-{
+{   
+    /*
+    gas_dispersedIn_liquid
+    {
+        type            RanzMarshall;
+        residualAlpha   1e-4;
+    }
+    liquid_dispersedIn_gas
+    {
+        type            RanzMarshall;
+        residualAlpha   1e-4;
+    }
+    */
     gas_dispersedIn_liquid_inThe_gas
     {
         type spherical;
-        residualAlpha   1e-3;
+        residualAlpha   1e-4;
     }
-
     gas_dispersedIn_liquid_inThe_liquid
     {
         type RanzMarshall;
-        residualAlpha   1e-3;
+        residualAlpha   1e-4;
+    }
+    
+    liquid_dispersedIn_gas_inThe_gas
+    {
+        type RanzMarshall;
+        residualAlpha   1e-4;
+    }
+    liquid_dispersedIn_gas_inThe_liquid
+    {
+        type spherical;
+        residualAlpha   1e-4;
     }
 }
 
@@ -172,56 +228,25 @@ turbulentDispersion
     */
 }
 
-
-blending
-{
-    default
-    {
-        type            continuous;
-        phase           liquid;
-    }
-}
-
-
-saturationTemperature
-{    
-    gas_liquid
-    {
-        type function1;
-
-        function scale;
-
-        xScale 1e-6;
-        scale   1;
-        value
-        {
-            type                tableFile;
-            format              csv;
-            nHeaderLine         1;
-            refColumn           1;
-            componentColumns    (0);
-            mergeSeparators     no;
-            file "$FOAM_RUN/twoPhaseNozzles/nakagawa_6MPa/CarbonDioxide_590000_6500000_218.592_400_saturation.csv";
-            //file "$FOAM_RUN/twoPhaseNozzles/nakagawa_6MPa/CarbonDioxide_517964_10000000_218.592_400_saturation.csv";
-            outOfBounds         clamp;
-            interpolationScheme linear;
-        }
-    }
-    
-}
-
-surfaceTension
+phaseTransfer
 {
     /*
-    gas_liquid
+    gas_dispersedIn_liquid
     {
-        type            constant;
-        sigma           1e-5;
+        type        cavitation;
+
+        model       SchnerrSauer;
+
+        liquid      liquid;
+
+        pSat        80000;
+
+        UInf        5.33;
+        tInf        0.028142589;
+        Cc          100;
+        Cv          100;
     }
     */
 }
-
-phaseTransfer
-{}
 
 // ************************************************************************* //

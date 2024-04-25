@@ -25,7 +25,9 @@ thermoType
     energy          sensibleEnthalpy;
 }
 
-dpdt yes;
+// dpdt yes;
+
+// pressureWorkAlphaLimit 0;
 
 mixture
 {
